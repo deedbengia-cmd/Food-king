@@ -43,6 +43,11 @@
             text-align:center;
         }
 
+        .food-card img{
+            width:100%;
+            border-radius:10px;
+        }
+
         .food-card h3{
             margin:5px 0;
         }
@@ -92,18 +97,19 @@
     <h2>🍕 Pizza</h2>
     <div class="food-grid">
         <div class="food-card">
+            <img src="images/pizza/margherita.jpg" alt="Margherita">
             <h3>Margherita</h3>
             <p class="price">₹199</p>
             <button onclick="addToCart('Margherita',199)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/pizza/vegloaded.jpg" alt="Veg Loaded">
             <h3>Veg Loaded</h3>
             <p class="price">₹249</p>
             <button onclick="addToCart('Veg Loaded',249)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/pizza/chickenpizza.jpg" alt="Chicken Pizza">
             <h3>Chicken Pizza</h3>
             <p class="price">₹299</p>
             <button onclick="addToCart('Chicken Pizza',299)">Add</button>
@@ -114,18 +120,19 @@
     <h2>🍔 Fast Food</h2>
     <div class="food-grid">
         <div class="food-card">
+            <img src="images/fastfood/burger.jpg" alt="Burger">
             <h3>Burger</h3>
             <p class="price">₹120</p>
             <button onclick="addToCart('Burger',120)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/fastfood/fries.jpg" alt="French Fries">
             <h3>French Fries</h3>
             <p class="price">₹90</p>
             <button onclick="addToCart('French Fries',90)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/fastfood/chickenroll.jpg" alt="Chicken Roll">
             <h3>Chicken Roll</h3>
             <p class="price">₹150</p>
             <button onclick="addToCart('Chicken Roll',150)">Add</button>
@@ -136,18 +143,19 @@
     <h2>🥤 Beverages</h2>
     <div class="food-grid">
         <div class="food-card">
+            <img src="images/beverages/cocacola.jpg" alt="Coca Cola">
             <h3>Coca Cola</h3>
             <p class="price">₹40</p>
             <button onclick="addToCart('Coca Cola',40)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/beverages/coldcoffee.jpg" alt="Cold Coffee">
             <h3>Cold Coffee</h3>
             <p class="price">₹110</p>
             <button onclick="addToCart('Cold Coffee',110)">Add</button>
         </div>
-
         <div class="food-card">
+            <img src="images/beverages/limjuice.jpg" alt="Fresh Lime Juice">
             <h3>Fresh Lime Juice</h3>
             <p class="price">₹60</p>
             <button onclick="addToCart('Fresh Lime Juice',60)">Add</button>
@@ -160,11 +168,8 @@
 
 <script>
 function addToCart(name, price){
-
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
     let existing = cart.find(item => item.name === name);
-
     if(existing){
         existing.quantity += 1;
     } else {
@@ -174,7 +179,6 @@ function addToCart(name, price){
             quantity: 1
         });
     }
-
     localStorage.setItem("cart", JSON.stringify(cart));
     alert(name + " added to cart!");
 }
