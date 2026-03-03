@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cart - Foodie Hub</title>
+    <title>Checkout - Foodie Hub</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body{
@@ -11,6 +11,13 @@
         }
         h1{
             text-align:center;
+        }
+        input, textarea{
+            width:100%;
+            padding:10px;
+            margin:8px 0;
+            border-radius:6px;
+            border:1px solid #ccc;
         }
         .item{
             background:white;
@@ -24,40 +31,52 @@
             margin-top:20px;
         }
         button{
-            padding:10px;
-            font-size:16px;
+            width:100%;
+            padding:12px;
+            font-size:18px;
             border:none;
-            border-radius:6px;
+            border-radius:8px;
+            margin-top:15px;
             cursor:pointer;
-            margin-top:10px;
         }
         .orderBtn{
-            width:100%;
             background:green;
             color:white;
-            font-size:18px;
         }
         .clearBtn{
-            width:100%;
             background:red;
             color:white;
         }
-        .removeBtn{
-            background:orange;
-            color:white;
+        .qr{
+            text-align:center;
+            margin-top:20px;
+        }
+        .qr img{
+            width:200px;
         }
     </style>
 </head>
 
 <body>
 
-<h1>Your Cart 🛒</h1>
+<h1>Checkout 🧾</h1>
 
+<h3>Customer Details</h3>
+<input type="text" id="name" placeholder="Your Name" required>
+<input type="text" id="phone" placeholder="Phone Number" required>
+<textarea id="address" placeholder="Delivery Address" required></textarea>
+
+<h3>Order Summary</h3>
 <div id="cartItems"></div>
 
 <p class="total">Grand Total: ₹<span id="grandTotal">0</span></p>
 
-<button class="orderBtn" onclick="sendWhatsApp()">Place Order on WhatsApp</button>
+<div class="qr">
+    <h3>Scan & Pay</h3>
+    <img src="qr.png" alt="QR Code">
+</div>
+
+<button class="orderBtn" onclick="sendWhatsApp()">Place Order</button>
 <button class="clearBtn" onclick="clearCart()">Clear Cart</button>
 
 <script>
@@ -75,28 +94,19 @@ function displayCart(){
         return;
     }
 
-    cart.forEach((item, index) => {
+    cart.forEach(item => {
         let itemTotal = item.price * item.quantity;
         grandTotal += itemTotal;
 
         container.innerHTML += `
             <div class="item">
-                <h3>${item.name}</h3>
-                <p>Price: ₹${item.price}</p>
-                <p>Quantity: ${item.quantity}</p>
-                <p>Total: ₹${itemTotal}</p>
-                <button class="removeBtn" onclick="removeItem(${index})">Remove</button>
+                <h4>${item.name}</h4>
+                <p>${item.quantity} x ₹${item.price} = ₹${itemTotal}</p>
             </div>
         `;
     });
 
     document.getElementById("grandTotal").innerText = grandTotal;
-}
-
-function removeItem(index){
-    cart.splice(index,1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    displayCart();
 }
 
 function clearCart(){
@@ -106,18 +116,34 @@ function clearCart(){
 }
 
 function sendWhatsApp(){
-    if(cart.length === 0){
-        alert("Your cart is empty!");
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let address = document.getElementById("address").value;
+
+    if(name=="" || phone=="" || address==""){
+        alert("Please fill all customer details!");
         return;
     }
 
-    let message = "🛒 *Foodie Hub Order* %0A%0A";
+    if(cart.length === 0){
+        alert("Cart is empty!");
+        return;
+    }
+
+    let orderId = "FH" + Math.floor(Math.random()*100000);
+
+    let message = "🧾 *Foodie Hub Order* %0A";
+    message += "Order ID: " + orderId + "%0A%0A";
+    message += "👤 Name: " + name + "%0A";
+    message += "📞 Phone: " + phone + "%0A";
+    message += "📍 Address: " + address + "%0A%0A";
+    message += "🛒 Items:%0A";
 
     cart.forEach(item => {
         message += item.name + " x " + item.quantity + " = ₹" + (item.price * item.quantity) + "%0A";
     });
 
-    message += "%0A*Grand Total:* ₹" + grandTotal;
+    message += "%0A💰 Grand Total: ₹" + grandTotal;
 
     window.open("https://wa.me/919363734907?text=" + message, "_blank");
 
