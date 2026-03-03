@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pizza - Foodie Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f4f4;
+            text-align: center;
+        }
+
+        header {
+            background: orange;
+            color: white;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 18px;
+            margin: 5px;
+        }
+
+        .total {
+            font-size: 20px;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🍕 Pizza</h1>
+</header>
+
+<div class="card">
+    <img src="https://i.imgur.com/eTmWoAN.png" alt="Pizza">
+
+    <h2>Margherita Pizza</h2>
+    <p>Price: ₹200</p>
+
+    <div>
+        <button onclick="decrease()">-</button>
+        <span id="qty">1</span>
+        <button onclick="increase()">+</button>
+    </div>
+
+    <p class="total">Total: ₹<span id="total">200</span></p>
+
+    <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+<script>
+let price = 200;
+let quantity = 1;
+
+function increase(){
+    quantity++;
+    updateTotal();
+}
+
+function decrease(){
+    if(quantity > 1){
+        quantity--;
+        updateTotal();
+    }
+}
+
+function updateTotal(){
+    document.getElementById("qty").innerText = quantity;
+    document.getElementById("total").innerText = price * quantity;
+}
+
+function addToCart(){
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    cart.push({
+        name: "Margherita Pizza",
+        price: price,
+        quantity: quantity
+    });
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+
+    alert("Added to Cart!");
+}
+</script>
+
+</body>
+</html>
