@@ -6,7 +6,6 @@
     <style>
         body{
             font-family: Arial;
-            margin:0;
             background:#f4f4f4;
             padding:20px;
         }
@@ -25,14 +24,27 @@
             margin-top:20px;
         }
         button{
-            padding:12px;
+            padding:10px;
+            font-size:16px;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            margin-top:10px;
+        }
+        .orderBtn{
             width:100%;
-            font-size:18px;
             background:green;
             color:white;
-            border:none;
-            border-radius:8px;
-            margin-top:20px;
+            font-size:18px;
+        }
+        .clearBtn{
+            width:100%;
+            background:red;
+            color:white;
+        }
+        .removeBtn{
+            background:orange;
+            color:white;
         }
     </style>
 </head>
@@ -45,17 +57,25 @@
 
 <p class="total">Grand Total: ₹<span id="grandTotal">0</span></p>
 
-<button onclick="sendWhatsApp()">Place Order on WhatsApp</button>
+<button class="orderBtn" onclick="sendWhatsApp()">Place Order on WhatsApp</button>
+<button class="clearBtn" onclick="clearCart()">Clear Cart</button>
 
 <script>
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let container = document.getElementById("cartItems");
 let grandTotal = 0;
 
-if(cart.length === 0){
-    container.innerHTML = "<p>Your cart is empty</p>";
-}else{
-    cart.forEach(item => {
+function displayCart(){
+    container.innerHTML = "";
+    grandTotal = 0;
+
+    if(cart.length === 0){
+        container.innerHTML = "<p>Your cart is empty</p>";
+        document.getElementById("grandTotal").innerText = 0;
+        return;
+    }
+
+    cart.forEach((item, index) => {
         let itemTotal = item.price * item.quantity;
         grandTotal += itemTotal;
 
@@ -65,14 +85,32 @@ if(cart.length === 0){
                 <p>Price: ₹${item.price}</p>
                 <p>Quantity: ${item.quantity}</p>
                 <p>Total: ₹${itemTotal}</p>
+                <button class="removeBtn" onclick="removeItem(${index})">Remove</button>
             </div>
         `;
     });
+
+    document.getElementById("grandTotal").innerText = grandTotal;
 }
 
-document.getElementById("grandTotal").innerText = grandTotal;
+function removeItem(index){
+    cart.splice(index,1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    displayCart();
+}
+
+function clearCart(){
+    localStorage.removeItem("cart");
+    cart = [];
+    displayCart();
+}
 
 function sendWhatsApp(){
+    if(cart.length === 0){
+        alert("Your cart is empty!");
+        return;
+    }
+
     let message = "🛒 *Foodie Hub Order* %0A%0A";
 
     cart.forEach(item => {
@@ -82,7 +120,12 @@ function sendWhatsApp(){
     message += "%0A*Grand Total:* ₹" + grandTotal;
 
     window.open("https://wa.me/919363734907?text=" + message, "_blank");
+
+    clearCart();
+    alert("Order Sent Successfully!");
 }
+
+displayCart();
 </script>
 
 </body>
